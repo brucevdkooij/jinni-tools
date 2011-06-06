@@ -302,14 +302,13 @@ def import_imdb_ratings():
     # csv.DictReader, so fix it up first by stripping all empty lines.
     # TODO: this certainly could be done more elegantly...
     imdb_ratings_file = os.path.join(data_directory, "ratings.csv")
-    jinni_ratings_file = os.path.join(data_directory, "jinni_ratings.csv")
-    
     ratings = [line for line in open(imdb_ratings_file, "rb").readlines() if line.strip() != ""]
     open(imdb_ratings_file, "wb").writelines(ratings)
-
     imdb_ratings = csv.DictReader(open(imdb_ratings_file, "rb"))
-    jinni_ratings = csv.DictReader(open(jinni_ratings_file, "rb"))
     
+    # Read in the exported Jinni ratingss
+    jinni_ratings_file = os.path.join(data_directory, "jinni_ratings.csv")
+    jinni_ratings = csv.DictReader(open(jinni_ratings_file, "rb"))
     jinni_ratings = [jinni_rating for jinni_rating in jinni_ratings]
     jinni_titles = set([jinni_rating["title"].lower() for jinni_rating in jinni_ratings])
     jinni_ids = set([int(jinni_rating["jinni_id"]) for jinni_rating in jinni_ratings])
