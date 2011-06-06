@@ -58,6 +58,7 @@ def open_url(request):
 
 # This maps Jinni's textual ratings to IMDB numerical ratings (1-10)
 jinni_imdb_rating_map = {
+    "terrible": 0, # FIXME: not sure what to do with this, wasn't expecting there to be a 0 rating...
     "awful": 1,
     "bad": 2,
     "poor": 3,
