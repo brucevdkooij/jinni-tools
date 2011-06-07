@@ -25,7 +25,7 @@ from collections import namedtuple
 # TODO: there's probably something better in urlparse.parse_qs
 import re
 def htmlentitydecode(s):
-    return re.sub("&#x([0-9]+);", 
+    return re.sub("&#x(.+);", 
         lambda m: chr(int("0x{0}".format(m.group(1)), 0)), s)
 
 data_directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
@@ -305,7 +305,9 @@ def jinni_findSuggestionsWithFilters(search):
             property = "".join([property for condition, property in properties if condition == True])
             
             if property != "":
-                value = statement.split("=")[1].strip("'")
+                value = statement.split("=")[1]
+                    .strip("'")
+                    .strip('"')
                 setattr(suggestion, property, value)
             
         # Make sure the last result is appended
@@ -382,7 +384,7 @@ def import_imdb_ratings():
             logging.info('Submitting rating for "{0}" (Jinni id: {1})...'.format(title, suggestion.id))
             jinni_submit_rating(your_rating, suggestion.id)
         else:
-            logging.error("IMDB id does not match up for {0} (IMDB) / {1} (Jinni) ({2} versus {3})...".format(title, suggestion.name, imdb_id, jinni_imdb_id))
+            logging.error('IMDB id does not match up for "{0}" (IMDB) / "{1}" (Jinni) ({2} versus {3})...'.format(title, suggestion.name, imdb_id, jinni_imdb_id))
 
 def main():
     jinni_login()
