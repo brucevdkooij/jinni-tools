@@ -305,7 +305,7 @@ def jinni_findSuggestionsWithFilters(search):
             property = "".join([property for condition, property in properties if condition == True])
             
             if property != "":
-                value = statement.split("=")[1]
+                value = statement.split("=")[1].strip("'")
                 setattr(suggestion, property, value)
             
         # Make sure the last result is appended
@@ -352,12 +352,17 @@ def import_imdb_ratings():
             logging.info("Skipping title `{0}` because rating already exists in Jinni...".format(title))
             continue
         
-        # Use the Jinni suggestion search to find our title
+        # Use the Jinni suggestion search to find our title (filter out keywords, plots, moods etc.)
         # TODO: would be nice if we could just search using IMDB id
-        suggestion = jinni_findSuggestionsWithFilters(title)[0]
+        suggestions = jinni_findSuggestionsWithFilters(title)
+        try:
+            suggestion = [suggestion for suggestion in suggestions 
+                if suggestion.contentType in ["FeatureFilm", "ShortFilm", "TvSeries"]][0]
+        except IndexError, ex:
+            logging.error('No suggestions found for title "{0}"'.format(title))
+            continue
         
         # Because titles sometimes differ between IMDB and Jinni, we'll also check the id from the suggestion
-        
         if suggestion.id in jinni_ids:
             logging.info("Skipping title `{0}` because rating already exists in Jinni...".format(title))
             continue
