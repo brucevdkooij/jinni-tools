@@ -305,9 +305,7 @@ def jinni_findSuggestionsWithFilters(search):
             property = "".join([property for condition, property in properties if condition == True])
             
             if property != "":
-                value = statement.split("=")[1]
-                    .strip("'")
-                    .strip('"')
+                value = statement.split("=")[1].strip("'").strip('"')
                 setattr(suggestion, property, value)
             
         # Make sure the last result is appended
