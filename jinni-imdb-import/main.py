@@ -340,7 +340,7 @@ def import_imdb_ratings():
     jinni_ratings = csv.DictReader(open(jinni_ratings_file, "rb"))
     jinni_ratings = [jinni_rating for jinni_rating in jinni_ratings]
     jinni_titles = set([jinni_rating["title"].lower() for jinni_rating in jinni_ratings])
-    jinni_ids = set([int(jinni_rating["jinni_id"]) for jinni_rating in jinni_ratings])
+    jinni_ids = set([jinni_rating["jinni_id"] for jinni_rating in jinni_ratings])
 
     for rating in imdb_ratings:
         title = htmlentitydecode(rating["title"])
