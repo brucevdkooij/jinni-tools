@@ -217,6 +217,12 @@ def jinni_parse_ratings_page(document):
     for rating_row in document.cssselect("#userRatingForm li"):
         # Can't use the content in the element with the .title class because in it the title is elipsed (shortened)
         title = rating_row.cssselect(".title")[0].getparent().get("title")
+        
+        # Apparantly people can also add not seen titles to their ratings, which appear as "Likely to see" without a numerical rating, check for those
+        if len(rating_row.cssselect(".likekyToSee")) > 0: 
+            logging.info('Ignoring non-rating "Likely to see" for title "{0}"'.format(title))
+            continue
+        
         digitRate = rating_row.cssselect(".digitRate")[0].text.strip()
         digitRate = int(digitRate[:digitRate.find("/")])
         textualRate = imdb_jinni_ratings_map[digitRate]
