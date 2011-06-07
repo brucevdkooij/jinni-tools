@@ -1,3 +1,5 @@
+*** This script doesn't work on Windows (yet) -- see: https://github.com/brucevdkooij/jinni-tools/issues/2***
+
 This script isn't perfect, I'm making no guarantees it will work for you. 
 
 Feel free to report any issues on https://github.com/brucevdkooij/jinni-tools/issues
