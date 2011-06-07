@@ -369,7 +369,13 @@ def import_imdb_ratings():
         
         # Verify if the IMDB ID listed matches up
         document = jinni_fetch_title_by_id(suggestion.id)
-        imdb_url = [a.get("href") for a in document.cssselect(".relatedLinks a") if a.text == "IMDb"][0]
+        
+        try:
+            imdb_url = [a.get("href") for a in document.cssselect(".relatedLinks a") if a.text == "IMDb"][0]
+        except IndexError, ex:
+            logging.error('Skipping title "{0}" because link to IMDB record on Jinni could not be found'.format(title))
+            continue
+            
         jinni_imdb_id = imdb_url[len("http://www.imdb.com/title/"):]
         
         if imdb_id == jinni_imdb_id:
