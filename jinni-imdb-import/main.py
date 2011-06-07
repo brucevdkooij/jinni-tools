@@ -74,7 +74,17 @@ jinni_imdb_rating_map = {
 # And the reverse (IMDB numerical ratings to Jinni's textual ratings)
 imdb_jinni_ratings_map = dict((v,k) for k, v in jinni_imdb_rating_map.iteritems())
 
+# Couple of useful classes
 Rating = namedtuple("Rating", ["jinni_id", "title", "digitRate", "textualRate", "ratingDate"])
+
+class JinniSuggestion:
+    categoryType = None
+    contentType = None
+    entityType = None
+    id = None
+    name = None
+    popularity = None
+    year = None
 
 def jinni_login():
     logging.info("Logging in...")
@@ -273,26 +283,35 @@ def jinni_findSuggestionsWithFilters(search):
     data = urllib.urlencode(values)
     request = urllib2.Request(url, data)
     response = open_url(request)
-    document = response.read()
+    content = response.read()
     
     # Parse the response (JavaScript)
-    from spidermonkey import Runtime, JSError
+    # I was using python-spidermonkey to parse the response, but it turned out that it isn't compatible with Windows. This is a quick hack until I find a good JS parser.
+    # FIXME: this obviously isn't very robust and prone to breakage in case Jinni changes anything
+    results = []
+    statements = content.split(";")
     
-    rt = Runtime()
-    cx = rt.new_context()
-    
-    # Make sure the variable dwr is defined or we'll get an exception
-    cx.execute("""
-    var dwr = {
-        engine: {
-            _remoteHandleCallback: function(x, y, z) { }
-        }
-    }
-    """)
-    
-    cx.execute(document)
-    results = cx.execute("s1")
-    
+    # Look for suggestions 
+    suggestion = None
+    for i, statement in enumerate(statements):
+        # Start of a suggestion
+        if "categoryType" in statement:
+            # Append the current suggestion if any
+            if suggestion != None: results.append(suggestion)
+            suggestion = JinniSuggestion()
+            
+        if suggestion:
+            properties = [(property in statement, property) for property in ["categoryType", "contentType", "entityType", "id", "name", "popularity", "year"]]
+            property = "".join([property for condition, property in properties if condition == True])
+            
+            if property != "":
+                value = statement.split("=")[1]
+                setattr(suggestion, property, value)
+            
+        # Make sure the last result is appended
+        if (i + 1) == len(statements):
+            if suggestion != None: results.append(suggestion)
+            
     """
     Example result:
     

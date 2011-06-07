@@ -15,14 +15,13 @@ How the script works:
 Module requirements:
 
  - lxml: for parsing HTML
- - python-spidermonkey: for parsing the JavaScript returned by the Jinni suggestion search
  - BeautifulSoup: required for parsing Jinni's ratings page
 
 Installing and running the program:
 
   1. Download and install Python 2.7.x (not Python 3.x).
   2. Download setuptools (http://pypi.python.org/pypi/setuptools)
-  3. Use easy_install to install lxml, python-spidermonkey and BeautifulSoup
+  3. Use easy_install to install lxml and BeautifulSoup
   
   4. Export your IMDB ratings to CSV manually at http://www.imdb.com/list/export?list_id=ratings (save it as `ratings.csv` in the data subdirectory)
   5. Open up config.py and enter your username and password
