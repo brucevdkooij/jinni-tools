@@ -255,7 +255,7 @@ def jinni_parse_ratings_page(document):
     return ratings
     
 def jinni_findSuggestionsWithFilters(search):
-    logging.info("Doing a suggestion search for `{0}`...".format(search))
+    logging.info('Doing a suggestion search for "{0}"...'.format(search))
     
     url = "http://www.jinni.com/dwr/call/plaincall/AjaxController.findSuggestionsWithFilters.dwr"
     values = {
@@ -349,7 +349,7 @@ def import_imdb_ratings():
         
         # FIXME: sometimes titles differ in IMDB and Jinni
         if title.lower() in jinni_titles:
-            logging.info("Skipping title `{0}` because rating already exists in Jinni...".format(title))
+            logging.info('Skipping title "{0}" because rating already exists in Jinni...'.format(title))
             continue
         
         # Use the Jinni suggestion search to find our title (filter out keywords, plots, moods etc.)
@@ -364,7 +364,7 @@ def import_imdb_ratings():
         
         # Because titles sometimes differ between IMDB and Jinni, we'll also check the id from the suggestion
         if suggestion.id in jinni_ids:
-            logging.info("Skipping title `{0}` because rating already exists in Jinni...".format(title))
+            logging.info('Skipping title "{0}" because rating already exists in Jinni...'.format(title))
             continue
         
         # Verify if the IMDB ID listed matches up
@@ -373,13 +373,13 @@ def import_imdb_ratings():
         try:
             imdb_url = [a.get("href") for a in document.cssselect(".relatedLinks a") if a.text == "IMDb"][0]
         except IndexError, ex:
-            logging.error('Skipping title "{0}" because link to IMDB record on Jinni could not be found'.format(title))
+            logging.error('Skipping title "{0}" because link to IMDB record on Jinni could not be found...'.format(title))
             continue
             
         jinni_imdb_id = imdb_url[len("http://www.imdb.com/title/"):]
         
         if imdb_id == jinni_imdb_id:
-            logging.info("Submitting rating for {0} (Jinni id: {1})...".format(title, suggestion.id))
+            logging.info('Submitting rating for "{0}" (Jinni id: {1})...'.format(title, suggestion.id))
             jinni_submit_rating(your_rating, suggestion.id)
         else:
             logging.error("IMDB id does not match up for {0} (IMDB) / {1} (Jinni) ({2} versus {3})...".format(title, suggestion.name, imdb_id, jinni_imdb_id))
