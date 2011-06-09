@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-#~ import sys
-#~ sys.exit("NOTE: Script disabled, see: https://github.com/brucevdkooij/jinni-tools")
+import sys
+sys.exit("NOTE: Script disabled, see: https://github.com/brucevdkooij/jinni-tools")
 
 import os
 import sys
