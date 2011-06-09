@@ -55,10 +55,10 @@ def download_new_version():
         if member.endswith(os.path.sep): continue # Skip all directories
         path = os.path.sep.join(member.split(os.path.sep)[1:]) # Remove the first directory
         if path in ["", "jinni-imdb-import/config.py"]: continue
-        target_path = os.path.join(
-            os.path.sep.join(os.path.abspath(__file__).split(os.path.sep)[:-2]), # i.e. jinni-tools
-            path
-        )
+        root_directory = os.path.sep.join(os.path.abspath(__file__).split(os.path.sep)[:-2]) # i.e. jinni-tools
+        if not os.path.basename(os.path.dirname(root_directory)) == "jinni-tools":
+            sys.exit("Expected to find jinni-tools root directory... exiting...")
+        target_path = os.path.join(root_directory, path)
         logging.info("Extracting {0}...".format(path))
         
         # TODO: couldn't figure out how to use extract properly
