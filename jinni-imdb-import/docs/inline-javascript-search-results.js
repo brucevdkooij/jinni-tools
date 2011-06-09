@@ -1,0 +1,23 @@
+var obj_collageEntry0 = {
+    entryId: 'collageEntry0',
+    extendedTitle: "The Shawshank Redemption",
+    DBID: 202,
+    contentPath: "movies/the-shawshank-redemption/",
+    contentType: "FeatureFilm",
+    affiliates: {"iTunes":{"affiliate":{"id":53,"name":"iTunes"},"affiliateContentIds":[{"key":"282875479"}],"deliveryMethods":["Online"]},"AMG":{"affiliate":{"id":9,"name":"AMG"},"affiliateContentIds":[{"key":"133417"}],"deliveryMethods":[]},"IMDB":{"affiliate":{"id":10,"name":"IMDB"},"affiliateContentIds":[{"key":"tt0111161"}],"deliveryMethods":[]},"Blockbuster":{"affiliate":{"id":19,"name":"Blockbuster"},"affiliateContentIds":[{"key":"22375","value":"Jinni internal ID"}],"deliveryMethods":["Ship","Download"]},"Netflix":{"affiliate":{"id":104,"name":"Netflix"},"affiliateContentIds":[{"key":"70005379"}],"deliveryMethods":["Ship"]},"Amazon":{"affiliate":{"id":51,"name":"Amazon"},"affiliateContentIds":[{"key":"B0000399WI"},{"key":"B00004CQOY","value":"[VHS]"},{"key":"B00004CS12","value":"[VHS]"},{"key":"B00004RYAE","value":"[Region 2]"},{"key":"B00005NW46"},{"key":"B000065GSD"},{"key":"B000Q67876"},{"key":"B001EBV0OY"}],"deliveryMethods":["Online","Ship","Download"]},"Tribune":{"affiliate":{"id":102,"name":"Tribune"},"affiliateContentIds":[{"key":"15987"}],"deliveryMethods":[]},"Muze":{"affiliate":{"id":101,"name":"Muze"},"affiliateContentIds":[{"key":"1056342"}],"deliveryMethods":[]}},
+    year: "1994",
+    shortSynopsis: "In writer-director Frank Darabont's THE SHAWSHANK REDEMPTION, Andy Dufresne (Tim Robbins) is sentenced...",
+    rollOverImage: "movie/the-shawshank-redemption/the-shawshank-redemption-1.jpeg",
+    availableCinema: false,
+    availableDvd: true,
+    availableTv: false,
+    availableOnline: false,
+    availableMobile: false,
+    availableDownload: true,
+    isSimilar: false,
+    similarTo: {id: "", title: ""},
+    peopleOrigins: null,
+    titlesOrignis: [{"entityId":202,"type":"Title","name":"The Shawshank Redemption","aka":false,"freeTextOrigin":true,"categoryPerfectMatch":false}],
+    categoriesOrigins: {},
+    numOfCategories: 0
+};
