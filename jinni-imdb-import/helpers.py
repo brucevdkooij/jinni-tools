@@ -27,6 +27,7 @@ def check_status():
         if response in ["", "Y", "y"]:
             logging.info("Downloading the new version...")
             download_new_version()
+            sys.exit("Extracted new version... exiting...")
         else:
             logging.info("OK, maybe later...")
     
@@ -51,13 +52,21 @@ def download_new_version():
     zipfile = ZipFile(tempfile, "r")
     
     for member in zipfile.namelist():
-        path = os.path.sep.join(member.rstrip(os.path.sep).split(os.path.sep)[1:])
+        if member.endswith(os.path.sep): continue # Skip all directories
+        path = os.path.sep.join(member.split(os.path.sep)[1:]) # Remove the first directory
         if path in ["", "jinni-imdb-import/config.py"]: continue
         target_path = os.path.join(
             os.path.sep.join(os.path.abspath(__file__).split(os.path.sep)[:-2]), # i.e. jinni-tools
-            path)
+            path
+        )
         logging.info("Extracting {0}...".format(path))
-        zipfile.extract(member, target_path)
+        
+        # TODO: couldn't figure out how to use extract properly
+        if not os.path.exists(os.path.dirname(target_path)):
+            os.makedirs(os.path.dirname(target_path))
+        
+        with open(target_path, "wb") as target_file:
+            target_file.write(zipfile.read(member))
     
     logging.info("Finished extracting...")
     
