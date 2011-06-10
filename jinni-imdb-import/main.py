@@ -313,6 +313,8 @@ def jinni_search(query):
     return results
 
 def import_imdb_ratings(imdb_ratings_file_path, jinni_ratings_file_path):
+    logging.info("Starting to import titles from IMDB export...")
+    
     # The IMDB CSV export starts with an empty line which isn't good for using with 
     # csv.DictReader, so fix it up first by stripping all empty lines.
     # TODO: this certainly could be done more elegantly...
@@ -335,7 +337,9 @@ def import_imdb_ratings(imdb_ratings_file_path, jinni_ratings_file_path):
     for imdb_rating in imdb_ratings:
         imdb_title = htmlentitydecode(imdb_rating["title"])
         
-        # TODO: check Jinni export for match before searching?
+        if imdb_title.lower() in jinni_titles:
+            logging.info('Skipping title "{0}" because rating already exists in Jinni...'.format(imdb_title))
+            continue
         
         search_results = jinni_search(u"{0} {1}".format(imdb_title, imdb_rating["year"]))
         
@@ -354,6 +358,11 @@ def import_imdb_ratings(imdb_ratings_file_path, jinni_ratings_file_path):
                     
             if match:
                 logging.info(u'Submitting rating for "{0}" (Jinni id: {1})...'.format(imdb_title, search_result["DBID"]))
+                
+                if str(search_result["DBID"]) in jinni_ids:
+                    logging.info('Skipping title "{0}" because rating already exists in Jinni...'.format(imdb_title))
+                    continue
+                
                 jinni_submit_rating(imdb_rating["your_rating"], search_result["DBID"])
             else:
                 # TODO: try a suggestion search before giving up?
@@ -382,7 +391,7 @@ def main():
     
     check_status()
     jinni_login()
-    #~ jinni_export_ratings(args.jinni_ratings_file_path)
+    jinni_export_ratings(args.jinni_ratings_file_path)
     import_imdb_ratings(args.imdb_ratings_file_path, args.jinni_ratings_file_path)
 
 if __name__ == "__main__":
