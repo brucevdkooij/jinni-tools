@@ -91,10 +91,17 @@ def jinni_login():
     }
     
     # TODO: display a message if authentication credentials are incorrect, note that if authentication fails a HTTP 500 error is returned
-    data = urllib.urlencode(values)
-    request = urllib2.Request(url, data)
-    response = open_url(request)
-    content = response.read()
+    try:
+        data = urllib.urlencode(values)
+        request = urllib2.Request(url, data)
+        response = open_url(request)
+        content = response.read()
+    except urllib2.HTTPError, ex:
+        if ex.code == 500:
+            logging.critical("Unable to login... Please make sure your username/password in `config.py` are correct...")
+            sys.exit()
+        else:
+            raise
 
 def jinni_submit_rating(rating, title_id):
     logging.info("Submitting rating...")
@@ -357,12 +364,11 @@ def import_imdb_ratings(imdb_ratings_file_path, jinni_ratings_file_path):
                     continue
                     
             if match:
-                logging.info(u'Submitting rating for "{0}" (Jinni id: {1})...'.format(imdb_title, search_result["DBID"]))
-                
                 if str(search_result["DBID"]) in jinni_ids:
                     logging.info('Skipping title "{0}" because rating already exists in Jinni...'.format(imdb_title))
                     continue
                 
+                logging.info(u'Submitting rating for "{0}" (Jinni id: {1})...'.format(imdb_title, search_result["DBID"]))
                 jinni_submit_rating(imdb_rating["your_rating"], search_result["DBID"])
             else:
                 # TODO: try a suggestion search before giving up?
@@ -395,4 +401,16 @@ def main():
     import_imdb_ratings(args.imdb_ratings_file_path, args.jinni_ratings_file_path)
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except ImportError, ex:
+        logging.critical(u"{0}... Are you sure you installed everything?".format(str(ex)))
+        raise
+    except Exception, ex:
+        import traceback
+        stacktrace = traceback.format_tb(sys.exc_info()[2])
+        # TODO: log the exception on a remote server so I can take a look at it
+        logging.critical("Something went seriously wrong... Please submit an issue at https://github.com/brucevdkooij/jinni-tools/issues")
+        raise
+        
+        
