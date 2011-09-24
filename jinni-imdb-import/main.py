@@ -338,17 +338,17 @@ def import_imdb_ratings(imdb_ratings_file_path, jinni_ratings_file_path):
     
     # A CSV for saving any mismatches
     mismatches_file = open(os.path.join(data_directory, "mismatches.csv"), "wb")
-    mismatches_csv = unicode_csv.UnicodeDictWriter(mismatches_file, fieldnames=["position", "id", "created", "modified", "description", "your_rating", "title", "imdb_rating", "runtime", "year", "genres", "num_votes"])
+    mismatches_csv = unicode_csv.UnicodeDictWriter(mismatches_file, fieldnames=["position", "const", "created", "modified", "description", "Title", "Title type", "Directors", "You rated", "IMDb Rating", "Runtime (mins)", "Year", "Genres", "Num. Votes", "Release Date (month/day/year)", "URL"])
     mismatches = []
 
     for imdb_rating in imdb_ratings:
-        imdb_title = htmlentitydecode(imdb_rating["title"])
+        imdb_title = htmlentitydecode(imdb_rating["Title"])
         
         if imdb_title.lower() in jinni_titles:
             logging.info('Skipping title "{0}" because rating already exists in Jinni...'.format(imdb_title))
             continue
         
-        search_results = jinni_search(u"{0} {1}".format(imdb_title, imdb_rating["year"]))
+        search_results = jinni_search(u"{0} {1}".format(imdb_title, imdb_rating["Year"]))
         
         if len(search_results) == 0:
             logging.error(u'No search results for "{0}"...'.format(imdb_title))
@@ -357,7 +357,7 @@ def import_imdb_ratings(imdb_ratings_file_path, jinni_ratings_file_path):
             match = None
             for search_result in search_results:
                 try:
-                    if imdb_rating["id"] == search_result["affiliates"]["IMDB"]["affiliateContentIds"]["key"]:
+                    if imdb_rating["const"] == search_result["affiliates"]["IMDB"]["affiliateContentIds"]["key"]:
                         match = search_result
                         break
                 except KeyError, ex:
@@ -369,7 +369,7 @@ def import_imdb_ratings(imdb_ratings_file_path, jinni_ratings_file_path):
                     continue
                 
                 logging.info(u'Submitting rating for "{0}" (Jinni id: {1})...'.format(imdb_title, search_result["DBID"]))
-                jinni_submit_rating(imdb_rating["your_rating"], search_result["DBID"])
+                jinni_submit_rating(imdb_rating["You rated"], search_result["DBID"])
             else:
                 # TODO: try a suggestion search before giving up?
                 logging.error(u'Could not find a match for "{0}"...'.format(imdb_title))
