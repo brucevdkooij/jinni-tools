@@ -45,7 +45,7 @@ The verbose instructions below are oriented towards novice Windows users. Howeve
   
   4. Export your IMDB ratings to CSV manually
   
-     Go to http://www.imdb.com/user/ur3755130/ratings, find the link "Export this list" and save the file as `imdb_ratings.csv` in the `data` subdirectory in the `imdb-jinni-import` directory.
+     Go to http://www.imdb.com/list/ratings, find the link "Export this list" and save the file as `imdb_ratings.csv` in the `data` subdirectory in the `imdb-jinni-import` directory.
   
   5. Open up `config.py` and enter your username and password
   
