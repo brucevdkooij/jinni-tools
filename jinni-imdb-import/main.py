@@ -183,9 +183,7 @@ def jinni_export_ratings(jinni_ratings_file_path):
     number_of_pages = math.ceil(total_number_of_results / 50.0)
     
     if number_of_pages > 1:
-        for i in range(1, int(number_of_pages)):
-            index = i + 1
-            
+        for index in range(2, int(number_of_pages) + 1):
             logging.info("Fetching another ratings page...")
             
             # Fetching consecutive pages requires passing along the viewstate
@@ -194,8 +192,8 @@ def jinni_export_ratings(jinni_ratings_file_path):
                 "userRatingForm": "userRatingForm",
                 "javax.faces.ViewState": viewstate,
                 # idx stands for index and represent the page number
-                "userRatingForm:j_id268idx{0}".format(index): "userRatingForm:j_id268idx{0}".format(index),
-                "userRatingForm:j_id268": "idx{0}".format(index)
+                "userRatingForm:j_id269idx{0}".format(index): "userRatingForm:j_id269idx{0}".format(index),
+                "userRatingForm:j_id269": "idx{0}".format(index)
             }
             
             data = urllib.urlencode(values)
@@ -205,7 +203,7 @@ def jinni_export_ratings(jinni_ratings_file_path):
             document = lxml.html.soupparser.fromstring(content.decode("utf-8"))
             
             ratings.extend(jinni_parse_ratings_page(document))
-            
+
     # Export the ratings to CSV
     jinni_ratings_file = open(jinni_ratings_file_path, "wb")
     writer = unicode_csv.UnicodeDictWriter(jinni_ratings_file, fieldnames=Rating._fields)
